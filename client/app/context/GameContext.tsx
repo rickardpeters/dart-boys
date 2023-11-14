@@ -1,6 +1,6 @@
 "use client";
 import React, { createContext, useState, useContext, useEffect } from "react";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs, onSnapshot } from "firebase/firestore";
 import db from "../firebase";
 
 export interface Game {
@@ -22,25 +22,22 @@ export const GameProvider = ({ children }: any) => {
   const [games, setGames] = useState<Game[]>([]);
 
   useEffect(() => {
-    getGames();
+    const unsubscribe = onSnapshot(
+      ref,
+      (snapshot) => {
+        const gamesArray: Game[] = snapshot.docs.map((doc) => {
+          const { id: docId, ...otherData } = doc.data() as Game;
+          return { id: doc.id, ...otherData };
+        });
+
+        setGames(gamesArray);
+      },
+      (error) => {
+        console.error("Error listening to documents:", error);
+      }
+    );
+    return () => unsubscribe();
   }, []);
-
-  const getGames = async () => {
-    try {
-      const snapshots = await getDocs(ref);
-
-      const data: Game[] = [];
-      snapshots.forEach((doc) => {
-        const { id: docId, ...otherData } = doc.data() as Game;
-
-        data.push({ id: doc.id, ...otherData });
-      });
-
-      setGames(data);
-    } catch (error) {
-      console.error("Error fetching documents:", error);
-    }
-  };
 
   return <GameContext.Provider value={{ games, setGames }}>{children}</GameContext.Provider>;
 };

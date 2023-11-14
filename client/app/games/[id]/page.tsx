@@ -18,7 +18,7 @@ const page = () => {
   }, [id, games]);
 
   if (!game) {
-    return <div className="grid place-items-center h-[70vh] text-3xl animate-pulse">Loading...</div>;
+    return <div className="grid place-items-center h-[70vh] text-3xl font-agbalumo animate-pulse">Loading...</div>;
   }
 
   return (

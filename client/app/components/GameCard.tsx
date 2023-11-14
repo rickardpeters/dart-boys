@@ -18,7 +18,7 @@ const GameCard: React.FC<GameCardProps> = ({ game }) => {
   return (
     <div
       onClick={() => handleClick(game)}
-      className="card w-64 shadow-md m-4 bg-neutral rounded-sm hover:scale-105 hover:cursor-pointer transition-all ease-in-out">
+      className="card w-64 shadow-md m-4 bg-neutral rounded-md hover:scale-105 hover:cursor-pointer transition-all ease-in-out">
       <div className="card-body">
         <h2 className="card-title text-xl">{game.name}</h2>
 
