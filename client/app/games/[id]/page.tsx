@@ -1,9 +1,9 @@
 "use client";
 import React, { useContext, useEffect, useState } from "react";
 
-import GameCard from "@/app/components/GameCard";
-import { GameContext, Game, GameProvider } from "@/app/context/GameContext";
+import { GameContext, Game } from "@/app/context/GameContext";
 import { useParams } from "next/navigation";
+import GamePage from "@/app/components/GamePage";
 
 const page = () => {
   const { id } = useParams(); // Fetching the game ID from the URL
@@ -11,8 +11,6 @@ const page = () => {
   const [game, setGame] = useState<Game | null>(null);
 
   useEffect(() => {
-    console.log(id);
-    // Find the game with the matching Firestore document ID
     const foundGame = games.find((game) => game.id === id);
     if (foundGame) {
       setGame(foundGame);
@@ -20,13 +18,13 @@ const page = () => {
   }, [id, games]);
 
   if (!game) {
-    return <div>Loading...</div>;
+    return <div className="grid place-items-center h-[70vh] text-3xl animate-pulse">Loading...</div>;
   }
 
   return (
-    <GameProvider>
-      <GameCard game={game} />
-    </GameProvider>
+    <div>
+      <GamePage game={game} />
+    </div>
   );
 };
 

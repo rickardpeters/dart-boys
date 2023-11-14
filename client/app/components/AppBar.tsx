@@ -4,9 +4,9 @@ import Link from "next/link";
 
 const AppBar = () => {
   return (
-    <header className="flex gap-4 p-4 bg-inherit shadow-md">
+    <header className="flex gap-4 p-4 bg-neutral shadow-md font-titilliumWeb">
       <Link href="/" replace>
-        <button className="btn btn-ghost rounded-md hover:scale-110 transition-all ease-in-out">Home</button>
+        <button className="btn btn-ghost rounded-md hover:scale-110 transition-all ease-in-out text-">Home</button>
       </Link>
       <Link href="/games/newgame" replace>
         <button className="btn btn-ghost rounded-md hover:scale-110 transition-all ease-in-out">New game</button>

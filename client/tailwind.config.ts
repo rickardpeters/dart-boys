@@ -11,6 +11,13 @@ const config: Config = {
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
         "gradient-conic": "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
+        pilTavla: "url('/public/pil.jpg')",
+      },
+
+      fontFamily: {
+        agbalumo: ["Agbalumo", "sans-erif"],
+        titilliumWeb: ["Titillium Web", "sans-serif"],
+        indieFlower: ["Indie Flower", "sans-serif"],
       },
     },
   },
