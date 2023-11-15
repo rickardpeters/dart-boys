@@ -1,7 +1,7 @@
 "use client";
 import React, { createContext, useState, useContext, useEffect } from "react";
 import { collection, getDocs, onSnapshot } from "firebase/firestore";
-import db from "../firebase";
+import { db } from "../firebase";
 
 export interface Game {
   id: string;

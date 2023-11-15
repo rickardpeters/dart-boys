@@ -1,6 +1,6 @@
 import React from "react";
-import SignInButton from "./SignInButton";
 import Link from "next/link";
+import { useAuth } from "../context/AuthContext";
 
 const AppBar = () => {
   return (
@@ -17,7 +17,17 @@ const AppBar = () => {
       <Link href="/highscore" replace>
         <button className="btn btn-ghost rounded-md hover:scale-110 transition-all ease-in-out">High Score</button>
       </Link>
-      <SignInButton />
+
+      <button className="btn btn-ghost rounded-md hover:scale-110 transition-all ease-in-out">Log out</button>
+
+      <>
+        <Link href="/signup" replace>
+          <button className="btn btn-ghost rounded-md hover:scale-110 transition-all ease-in-out">Sign Up</button>
+        </Link>
+        <Link href="/login" replace>
+          <button className="btn btn-ghost rounded-md hover:scale-110 transition-all ease-in-out">Log in</button>
+        </Link>
+      </>
     </header>
   );
 };

@@ -1,7 +1,7 @@
 "use client";
 import { addDoc, collection } from "firebase/firestore";
 import React, { useState } from "react";
-import db from "../firebase";
+import { db } from "../firebase";
 
 const AddGame = () => {
   const [name, setName] = useState("");
