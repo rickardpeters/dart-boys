@@ -9,13 +9,14 @@ const SignUp: React.FC = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const { user, register } = useAuth();
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError("");
     try {
       await register(email, password);
-      useRouter().push(`/games`);
+      router.push(`/games`);
     } catch (error) {
       setError("Failed to create an account. ");
     }

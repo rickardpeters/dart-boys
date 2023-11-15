@@ -37,7 +37,7 @@ export const GameProvider = ({ children }: any) => {
       }
     );
     return () => unsubscribe();
-  }, []);
+  });
 
   return <GameContext.Provider value={{ games, setGames }}>{children}</GameContext.Provider>;
 };

@@ -5,7 +5,7 @@ import { GameContext, Game } from "@/app/context/GameContext";
 import { useParams } from "next/navigation";
 import GamePage from "@/app/components/GamePage";
 
-const page = () => {
+const Page = () => {
   const { id } = useParams(); // Fetching the game ID from the URL
   const { games } = useContext(GameContext); // Using context to get games
   const [game, setGame] = useState<Game | null>(null);
@@ -28,4 +28,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;
