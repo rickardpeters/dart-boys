@@ -1,8 +1,7 @@
 "use client";
 import React, { createContext, useState, useEffect, ReactNode, useContext } from "react";
-import { collection, getDocs } from "firebase/firestore";
+import { Unsubscribe, collection, onSnapshot } from "firebase/firestore";
 import { db } from "../firebase";
-import { useAuth } from "./AuthContext";
 
 export interface Game {
   id: string;
@@ -13,9 +12,13 @@ export interface Game {
 export const GameContext = createContext<{
   games: Game[];
   setGames: React.Dispatch<React.SetStateAction<Game[]>>;
+  fetch: boolean;
+  setFetch: React.Dispatch<React.SetStateAction<boolean>>;
 }>({
   games: [],
   setGames: () => {},
+  fetch: false,
+  setFetch: () => {},
 });
 
 interface GameProviderProps {
@@ -26,24 +29,41 @@ export const GameProvider = ({ children }: GameProviderProps) => {
   const ref = collection(db, "games");
   const [games, setGames] = useState<Game[]>([]);
 
+  const [fetch, setFetch] = useState(false);
+
   useEffect(() => {
-    const fetchGames = async () => {
-      try {
-        const snapshot = await getDocs(ref);
+    let unsubscribe: Unsubscribe | null = null;
+
+    unsubscribe = onSnapshot(
+      ref,
+      (snapshot) => {
         const gamesArray: Game[] = snapshot.docs.map((doc) => {
-          const { id: docId, ...otherData } = doc.data() as Game;
-          return { id: doc.id, ...otherData };
+          const gameData = doc.data() as Game;
+          console.log("fetching games...");
+          return {
+            _id: doc.id,
+            get id() {
+              return this._id;
+            },
+            set id(value) {
+              this._id = value;
+            },
+            ...gameData,
+          };
         });
         setGames(gamesArray);
-      } catch (error) {
+      },
+      (error) => {
         console.error("Error fetching documents:", error);
       }
+    );
+
+    return () => {
+      if (unsubscribe) unsubscribe();
     };
+  }, [fetch]);
 
-    fetchGames();
-  });
-
-  return <GameContext.Provider value={{ games, setGames }}>{children}</GameContext.Provider>;
+  return <GameContext.Provider value={{ games, setGames, fetch, setFetch }}>{children}</GameContext.Provider>;
 };
 
 export const useGames = () => useContext(GameContext);

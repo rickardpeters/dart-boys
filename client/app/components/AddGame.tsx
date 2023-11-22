@@ -2,13 +2,13 @@
 import { addDoc, collection } from "firebase/firestore";
 import React, { useState } from "react";
 import { auth, db } from "../firebase";
+import { useGames } from "../context/GameContext";
 
 const AddGame = () => {
   const [name, setName] = useState("");
   const [player1, setPlayer1] = useState("");
   const [player2, setPlayer2] = useState("");
-
-  // Example game data
+  const { fetch, setFetch } = useGames();
 
   const addNewGame = () => {
     const newGame = {
@@ -28,6 +28,7 @@ const AddGame = () => {
         setPlayer1("");
         setPlayer2("");
       })
+      .then(() => setFetch(!fetch))
       .catch((error) => {
         console.error("Error adding document: ", error);
       });

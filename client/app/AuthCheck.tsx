@@ -25,7 +25,5 @@ export const authCheck = (Component: React.ElementType) => {
     return <Component {...props} />;
   };
 
-  // Assign a display name for the HOC
-
   return WithAuthCheck;
 };
