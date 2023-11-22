@@ -1,7 +1,7 @@
 "use client";
 import { addDoc, collection } from "firebase/firestore";
 import React, { useState } from "react";
-import { db } from "../firebase";
+import { auth, db } from "../firebase";
 
 const AddGame = () => {
   const [name, setName] = useState("");
@@ -17,6 +17,7 @@ const AddGame = () => {
         { playerId: player1, score: 0 },
         { playerId: player2, score: 0 },
       ],
+      createdBy: auth.currentUser?.uid,
     };
 
     addDoc(collection(db, "games"), newGame)

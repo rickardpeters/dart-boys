@@ -4,6 +4,8 @@ import React, { useContext, useEffect, useState } from "react";
 import { GameContext, Game } from "@/app/context/GameContext";
 import { useParams } from "next/navigation";
 import GamePage from "@/app/components/GamePage";
+import Loading from "@/app/components/Loading";
+import { authCheck } from "@/app/AuthCheck";
 
 const Page = () => {
   const { id } = useParams(); // Fetching the game ID from the URL
@@ -18,7 +20,7 @@ const Page = () => {
   }, [id, games]);
 
   if (!game) {
-    return <div className="grid place-items-center h-[70vh] text-3xl font-agbalumo animate-pulse">Loading...</div>;
+    return <Loading />;
   }
 
   return (
@@ -28,4 +30,4 @@ const Page = () => {
   );
 };
 
-export default Page;
+export default authCheck(Page);

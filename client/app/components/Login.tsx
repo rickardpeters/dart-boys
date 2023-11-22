@@ -41,7 +41,7 @@ const Login: React.FC = () => {
           required
           className="input input-ghost focus:non w-full max-w-xs m-2 rounded-none border-b-2 border-neutral border-t-0 border-r-0 border-l-0 focus:ring-0 focus:outline-none focus:border-b-2 focus:border-neutral"
         />
-        <button type="submit" className="btn btn-primary m-2 justify-center rounded-md w-full">
+        <button type="submit" className="btn btn-primary m-2 justify-center rounded-md w-full text-primary-content">
           Login
         </button>
         <p className="text-sm w-full text-center m-2">

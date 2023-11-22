@@ -2,6 +2,7 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, User } from "firebase/auth";
 import { auth } from "../firebase";
+import { useRouter } from "next/navigation";
 
 interface AuthContextType {
   user: User | null;
@@ -22,6 +23,7 @@ export const useAuth = () => {
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
+  const router = useRouter();
 
   const register = async (email: string, password: string) => {
     try {
@@ -38,6 +40,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       setUser(userCredential.user);
       console.log("Success! You are now logged in to: ", email);
+      router.push("/");
     } catch (error) {
       console.error("Error logging in: ", error);
     }
@@ -48,6 +51,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       await signOut(auth);
       setUser(null);
       console.log("Success! You are now logged out.");
+      router.push("/");
     } catch (error) {
       console.error("Error logging out: ", error);
     }

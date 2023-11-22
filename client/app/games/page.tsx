@@ -2,6 +2,7 @@
 import React from "react";
 import { GameProvider } from "../context/GameContext";
 import GameList from "../components/GameList";
+import { authCheck } from "../AuthCheck";
 
 const page = () => {
   return (
@@ -13,4 +14,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default authCheck(page);

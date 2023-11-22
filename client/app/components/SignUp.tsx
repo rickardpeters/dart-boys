@@ -7,18 +7,17 @@ import Link from "next/link";
 const SignUp: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
   const { user, register } = useAuth();
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setError("");
+
     try {
       await register(email, password);
-      router.push(`/games`);
+      router.push(`/`);
     } catch (error) {
-      setError("Failed to create an account. ");
+      console.error("Error signing up: ", error);
     }
     setEmail("");
     setPassword("");
@@ -44,12 +43,12 @@ const SignUp: React.FC = () => {
           required
           className="input input-ghost focus:non w-full max-w-xs m-2 rounded-none border-b-2 border-neutral border-t-0 border-r-0 border-l-0 focus:ring-0 focus:outline-none focus:border-b-2 focus:border-neutral"
         />
-        <button type="submit" className="btn btn-primary m-2 justify-center rounded-md w-full">
+        <button type="submit" className="btn btn-primary m-2 justify-center rounded-md w-full text-primary-content">
           Sign up
         </button>
         <p className="text-sm w-full text-center m-2">
           Already a member?{" "}
-          <Link href="/signup" className="underline text-accent" replace>
+          <Link href="/login" className="underline text-accent" replace>
             {`Click here`}
           </Link>{" "}
           to sign in!

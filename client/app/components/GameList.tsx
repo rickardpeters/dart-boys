@@ -1,13 +1,14 @@
 "use client";
-import React, { useContext } from "react";
+import React from "react";
 import GameCard from "./GameCard";
-import { GameContext } from "../context/GameContext";
+import { useGames } from "../context/GameContext";
+import Loading from "./Loading";
 
 const GameList = () => {
-  const { games } = useContext(GameContext);
+  const { games } = useGames();
 
   if (!games) {
-    return <div className="grid place-items-center h-[70vh] text-3xl font-agbalumo animate-pulse">Loading...</div>;
+    return <Loading />;
   }
 
   return (
