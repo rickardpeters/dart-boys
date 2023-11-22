@@ -5,7 +5,7 @@ import Loading from "./components/Loading";
 import { useAuth } from "./context/AuthContext";
 
 export const authCheck = (Component: React.ElementType) => {
-  return (props: any) => {
+  const WithAuthCheck = (props: any) => {
     const router = useRouter();
     const [status, setStatus] = useState("LOADING");
     const { user } = useAuth();
@@ -16,7 +16,7 @@ export const authCheck = (Component: React.ElementType) => {
       } else {
         setStatus("SIGNED_IN");
       }
-    }, [router]);
+    }, [user, router]);
 
     if (status === "LOADING") {
       return <Loading />;
@@ -24,4 +24,8 @@ export const authCheck = (Component: React.ElementType) => {
 
     return <Component {...props} />;
   };
+
+  // Assign a display name for the HOC
+
+  return WithAuthCheck;
 };

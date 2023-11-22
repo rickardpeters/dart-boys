@@ -41,7 +41,7 @@ export const GameProvider = ({ children }: GameProviderProps) => {
     };
 
     fetchGames();
-  }, []);
+  });
 
   return <GameContext.Provider value={{ games, setGames }}>{children}</GameContext.Provider>;
 };
