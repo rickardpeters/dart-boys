@@ -1,37 +1,20 @@
 "use client";
-import { addDoc, collection } from "firebase/firestore";
 import React, { useState } from "react";
-import { auth, db } from "../firebase";
 import { useGames } from "../context/GameContext";
 
 const AddGame = () => {
   const [name, setName] = useState("");
   const [player1, setPlayer1] = useState("");
   const [player2, setPlayer2] = useState("");
-  const { fetch, setFetch } = useGames();
+
+  const { addGame } = useGames();
 
   const addNewGame = () => {
-    const newGame = {
-      name: name,
-      players: [
-        { playerId: player1, score: 0 },
-        { playerId: player2, score: 0 },
-      ],
-      createdBy: auth.currentUser?.uid,
-    };
+    addGame(name, player1, player2);
 
-    addDoc(collection(db, "games"), newGame)
-      .then((docRef) => {
-        console.log("Document written with ID: ", docRef.id);
-        alert("Game created!");
-        setName("");
-        setPlayer1("");
-        setPlayer2("");
-      })
-      .then(() => setFetch(!fetch))
-      .catch((error) => {
-        console.error("Error adding document: ", error);
-      });
+    setName("");
+    setPlayer1("");
+    setPlayer2("");
   };
 
   return (

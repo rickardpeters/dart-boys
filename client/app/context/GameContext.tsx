@@ -1,7 +1,7 @@
 "use client";
 import React, { createContext, useState, useEffect, ReactNode, useContext } from "react";
-import { Unsubscribe, collection, onSnapshot } from "firebase/firestore";
-import { db } from "../firebase";
+import { Unsubscribe, addDoc, collection, getDocs, onSnapshot } from "firebase/firestore";
+import { auth, db } from "../firebase";
 
 export interface Game {
   id: string;
@@ -12,13 +12,11 @@ export interface Game {
 export const GameContext = createContext<{
   games: Game[];
   setGames: React.Dispatch<React.SetStateAction<Game[]>>;
-  fetch: boolean;
-  setFetch: React.Dispatch<React.SetStateAction<boolean>>;
+  addGame: (name: string, player1: string, player2: string) => Promise<void>;
 }>({
   games: [],
   setGames: () => {},
-  fetch: false,
-  setFetch: () => {},
+  addGame: async () => {},
 });
 
 interface GameProviderProps {
@@ -29,41 +27,45 @@ export const GameProvider = ({ children }: GameProviderProps) => {
   const ref = collection(db, "games");
   const [games, setGames] = useState<Game[]>([]);
 
-  const [fetch, setFetch] = useState(false);
-
-  useEffect(() => {
-    let unsubscribe: Unsubscribe | null = null;
-
-    unsubscribe = onSnapshot(
-      ref,
-      (snapshot) => {
-        const gamesArray: Game[] = snapshot.docs.map((doc) => {
-          const gameData = doc.data() as Game;
-          console.log("fetching games...");
-          return {
-            _id: doc.id,
-            get id() {
-              return this._id;
-            },
-            set id(value) {
-              this._id = value;
-            },
-            ...gameData,
-          };
-        });
-        setGames(gamesArray);
-      },
-      (error) => {
-        console.error("Error fetching documents:", error);
-      }
+  const fetchGames = async () => {
+    const querySnapshot = await getDocs(ref);
+    console.log("fetching games...");
+    const gamesArray: Game[] = querySnapshot.docs.map(
+      (doc) =>
+        ({
+          id: doc.id,
+          ...doc.data(),
+        } as Game)
     );
 
-    return () => {
-      if (unsubscribe) unsubscribe();
-    };
-  }, [fetch]);
+    setGames(gamesArray);
+    localStorage.setItem("games", JSON.stringify(gamesArray)); // Cache the games
+  };
 
-  return <GameContext.Provider value={{ games, setGames, fetch, setFetch }}>{children}</GameContext.Provider>;
+  const addGame = async (name: string, player1: string, player2: string) => {
+    const newGame = {
+      name,
+      players: [
+        { playerId: player1, score: 0 },
+        { playerId: player2, score: 0 },
+      ],
+      createdBy: auth.currentUser?.uid,
+    };
+
+    await addDoc(collection(db, "games"), newGame);
+    fetchGames();
+  };
+
+  useEffect(() => {
+    const cachedGames = localStorage.getItem("games");
+    if (cachedGames) {
+      setGames(JSON.parse(cachedGames));
+    } else {
+      fetchGames();
+    }
+  }, []);
+
+  return <GameContext.Provider value={{ games, setGames, addGame }}>{children}</GameContext.Provider>;
 };
 
 export const useGames = () => useContext(GameContext);
