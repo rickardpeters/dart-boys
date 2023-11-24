@@ -7,6 +7,7 @@ import Link from "next/link";
 const SignUp: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
   const { user, register } = useAuth();
   const router = useRouter();
 
@@ -14,7 +15,7 @@ const SignUp: React.FC = () => {
     e.preventDefault();
 
     try {
-      await register(email, password);
+      await register(email, password, name);
       router.push(`/`);
     } catch (error) {
       console.error("Error signing up: ", error);
@@ -32,6 +33,14 @@ const SignUp: React.FC = () => {
           value={email}
           type="email"
           placeholder="Enter your e-mail"
+          required
+          className="input input-ghost focus:non w-full max-w-xs m-2 rounded-none border-b-2 border-neutral border-t-0 border-r-0 border-l-0 focus:ring-0 focus:outline-none focus:border-b-2 focus:border-neutral"
+        />
+        <input
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setName(e.target.value)}
+          value={name}
+          type="input"
+          placeholder="Enter your name"
           required
           className="input input-ghost focus:non w-full max-w-xs m-2 rounded-none border-b-2 border-neutral border-t-0 border-r-0 border-l-0 focus:ring-0 focus:outline-none focus:border-b-2 focus:border-neutral"
         />

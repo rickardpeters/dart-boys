@@ -1,12 +1,13 @@
 "use client";
 import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, User } from "firebase/auth";
-import { auth } from "../firebase";
-import { useRouter } from "next/navigation";
+import { doc, setDoc, collection } from "firebase/firestore";
+import { auth, db } from "../firebase";
+import { useRouter } from "next/navigation"; // Ensure correct import for Next.js router
 
 interface AuthContextType {
   user: User | null;
-  register: (email: string, password: string) => Promise<void>;
+  register: (email: string, password: string, name: string) => Promise<void>;
   login: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
 }
@@ -25,11 +26,17 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [user, setUser] = useState<User | null>(null);
   const router = useRouter();
 
-  const register = async (email: string, password: string) => {
+  const register = async (email: string, password: string, name: string) => {
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       setUser(userCredential.user);
       console.log("User created successfully:", userCredential.user);
+
+      // Create a user document in Firestore
+      const userDocRef = doc(db, "users", userCredential.user.uid);
+      await setDoc(userDocRef, { email, name });
+
+      router.push("/");
     } catch (error) {
       console.error("Error creating user:", error);
     }
@@ -39,10 +46,10 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       setUser(userCredential.user);
-      console.log("Success! You are now logged in to: ", email);
+      console.log("Success! You are now logged in:", email);
       router.push("/");
     } catch (error) {
-      console.error("Error logging in: ", error);
+      console.error("Error logging in:", error);
     }
   };
 
@@ -53,7 +60,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       console.log("Success! You are now logged out.");
       router.push("/");
     } catch (error) {
-      console.error("Error logging out: ", error);
+      console.error("Error logging out:", error);
     }
   };
 
